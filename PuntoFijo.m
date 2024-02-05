@@ -8,25 +8,45 @@ function MetodoPuntoFijo
   clear
   clc
 
-  it = 0;
+  it = 1;
   raiz = 0;
   x0 = 0;
   tol = Inf;
-  error1 = 0;
-  error2 = 0;
+  errores = [];
   convergencia = true;
 
   while( it < 100 && tol > 0.005 && convergencia == true )
 
     raiz = funciong(x0);
     tol = abs(raiz - funciong(raiz));
-    x0 = raiz;
-    it = it + 1;
 
-  endwhile
+    errores(it) = raiz - x0;
+
+    if( it > 2 )
+
+      if ( abs(errores( it - 1 )) < abs(errores(it)) )
+
+        disp("El método diverge.");
+
+        convergencia = false;
+
+        break;
+
+      endif
+
+    endif
+
+    x0 = raiz;
+    it = it  + 1;
+
+endwhile
+
+if(convergencia == true)
 
   disp(['La raíz es: ', num2str(raiz)]);
-  disp(['La cantidad de interaciones es de: ', num2str(it)]);
+  disp(['La cantidad de interaciones es de: ', num2str(it - 1)]);
+
+endif
 
   x = linspace(-5,5,100);
   y =  e.^(-x) - x;
